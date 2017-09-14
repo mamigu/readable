@@ -12,8 +12,40 @@ li {
   list-style-type: none;
 }
 
+a:link {
+    color: black;
+}
+
+
+.post-container {
+  display: flex;
+  flex-direction: row;
+  padding: 15px;
+  border: solid;
+  margin: 5px;
+}
+
+.post {
+  display: inherit;
+  flex: 1 1 95%;
+  padding-top: 25px;
+}
+
+.post-title {
+  flex: 1 1 90%;
+  overflow: auto;
+  font-size: 20px;
+}
+
+.post-timestamp {
+  font-size: 14px;
+  flex: 1 1 10%;
+  padding-top: 5px;
+}
+
 .vote {
   text-align: center;
+  flex: 0 1 5%;
 }
 
 .vote-up {
@@ -62,6 +94,7 @@ li {
 .icon-btn {
   background: none;
   border: none;
+  cursor: pointer;
 }
 
 .nav {

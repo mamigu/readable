@@ -38,12 +38,12 @@ class NavigationBar extends Component {
         })
     }
 
-    onCreateNewPost(title, body, owner) {
+    onCreateNewPost(title, owner, body) {
         this.setState({disabled: true});
         let component = this;
         if(this.state.selectedCategory !== "none") {
             setTimeout(() => {
-                this.props.createNewPost(title, body, owner, this.state.selectedCategory);
+                this.props.createNewPost(title, owner, body, this.state.selectedCategory);
                 component.setState({disabled: false, createPostModal: false});
             })
         }
@@ -57,15 +57,11 @@ class NavigationBar extends Component {
                     <li className="nav-item">
                         <Link to="/">Home</Link>
                     </li>
-                    <li className="nav-item">
-                        <Link to="/exercise">Exercise</Link>
-                    </li>
-                    <li className="nav-item">
-                        <Link to="/diet">Diet</Link>
-                    </li>
-                    <li className="nav-item">
-                        <Link to="/miscellaneous">Miscellaneous</Link>
-                    </li>
+                    {this.props.categories.length > 0 && this.props.categories.map(cat => (
+                        <li className="nav-item" key={"_" + cat.name}>
+                            <Link to={"/" + cat.path}>{cat.name}</Link>
+                        </li>
+                    ))}
                     <li className="nav-item">
                         <a href="#" onClick={this.openCreatePostModal.bind(this)}>Create Post</a>
                     </li>
@@ -74,7 +70,7 @@ class NavigationBar extends Component {
                                   onCreateNewPost={this.onCreateNewPost}
                                   onClose={this.closeCreatePostModal.bind(this)}
                                   display={this.state.createPostModal}
-                                  defaultValue={this.props.match ? this.props.match.params.category : "none"}
+                                  defaultValue={this.state.selectedCategory}
                                   buttonDisabled={this.state.selectedCategory === "none" || this.state.disabledSubmit}/>
             </div>
         )
@@ -82,15 +78,14 @@ class NavigationBar extends Component {
 }
 
 function mapStateToProps (state) {
-    const categories = state.categories;
     return {
-        categories
+        ...state
     }
 }
 
 function mapDispatchToProps (dispatch) {
     return {
-        createNewPost: (data) => dispatch(createNewPost(data))
+        createNewPost: (title, owner, body, category) => dispatch(createNewPost(title, owner, body, category))
     }
 }
 
