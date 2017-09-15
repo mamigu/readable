@@ -1,6 +1,8 @@
 module.exports = {
-    compareVoteScore(firstPost , secondPost) {
-        return secondPost.voteScore - firstPost.voteScore;
+    comparePostsWithProp(prop) {
+        return (firstPost , secondPost) => {
+            return secondPost[prop] - firstPost[prop];
+        };
     },
 
     convertSecondsToDate(timeStamp) {

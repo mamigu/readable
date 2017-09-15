@@ -16,6 +16,10 @@ a:link {
     color: black;
 }
 
+.post-sort-box {
+  padding: 5px;
+  margin: 5px;
+}
 
 .post-container {
   display: flex;

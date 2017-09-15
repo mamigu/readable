@@ -25,9 +25,18 @@ export function getAllPosts() {
     }
 }
 
+export function sortPostsByProperty(prop) {
+    return (dispatch) => {
+        dispatch({
+            type: ActionConstants.SORT_POSTS,
+            data: prop
+        })
+    }
+}
+
 export function getPostsForCategory(category = '') {
     return (dispatch) => {
-        ServerApi.getPostsForCategory(category)
+        return ServerApi.getPostsForCategory(category)
             .then(posts => {
                 dispatch({
                     type: ActionConstants.GET_POSTS_FOR_CATEGORY,
@@ -51,7 +60,7 @@ export function createNewPost(title, owner, body, category) {
     };
 
     return (dispatch) => {
-        ServerApi.createNewPost(postData)
+        return ServerApi.createNewPost(postData)
             .then((newPost) => {
                 dispatch({
                     type: ActionConstants.CREATE_NEW_POST,
@@ -64,7 +73,7 @@ export function createNewPost(title, owner, body, category) {
 export function voteOnPost(postId, option) {
 
     return (dispatch) => {
-        ServerApi.voteOnPost(postId, {option})
+        return ServerApi.voteOnPost(postId, {option})
             .then(() => {
                 dispatch({
                     type: ActionConstants.VOTE_POST,
@@ -75,7 +84,7 @@ export function voteOnPost(postId, option) {
 
 export function getPostAndComments(postId) {
     return (dispatch) => {
-        ServerApi.getPostDetails(postId)
+        return ServerApi.getPostDetails(postId)
             .then((post) => {
                 return ServerApi.getCommentsForPost(postId)
                     .then((comments) => {

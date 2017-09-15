@@ -1,4 +1,6 @@
  module.exports = {
     UpVote: "upVote",
-     DownVote: "downVote",
- }
+    DownVote: "downVote",
+    VoteScore: "voteScore",
+    TimeStamp: "timestamp"
+ };

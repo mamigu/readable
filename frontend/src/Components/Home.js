@@ -2,30 +2,45 @@ import React, {Component} from 'react';
 import {connect} from "react-redux";
 import {Link, withRouter} from "react-router-dom";
 
-import {getAllPosts, getAllCategories} from "../Actions/index";
+import {getAllPosts, sortPostsByProperty} from "../Actions/index";
 import PostBody from "./PostBody";
+import * as Strings from "../Constants/Strings";
 
 class Home extends Component {
 
+    constructor(props) {
+        super(props);
+        this.onSelectionChange = this.onSelectionChange.bind(this);
+    }
+
     componentDidMount() {
         this.props.getAllPosts();
+    }
+
+    onSelectionChange(e) {
+        if(e.target.value !== "none") {
+            this.props.sortPostsByProperty(e.target.value);
+            this.forceUpdate();
+        }
     }
 
     render() {
         return (
             <div>
                 <h1>Readable Project Application</h1>
-                <h3>Finally, an off-screen menu that doesn't require a bunch of Javascript to work. </h3>
-
-                <p>This concept relies on the <code>:checked</code> pseudo-selector as well as the general sibling
-                    <code>~</code> selector, so it has decent browser support.</p>
-                <p><strong>Browsers supported:</strong> IE9+, Firefox 3.5+, Chrome any, Safari 3.2+, Opera 9.5+</p>
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quasi vero nisi eos sed qui natus, ut eius
-                    reprehenderit error nesciunt veniam aliquam nulla itaque labore obcaecati molestiae eveniet,
-                    perferendis provident amet perspiciatis expedita accusantium! Eveniet, quos voluptas et, labore
-                    natus, saepe unde est nulla sit eaque tempore debitis accusantium. Recusandae.</p>
-                <p>Demo by Austin Wulf. <a href="http://www.sitepoint.com/pure-css-off-screen-navigation-menu">See
-                    article</a>.</p>
+                {this.props.posts.length > 0 ?
+                    <div>
+                        <h2>{Strings.TopPosts}</h2>
+                        <div className="post-sort-box">
+                            <select defaultValue="none" onChange={(e) => this.onSelectionChange(e)}>
+                                <option value="none" disabled>{Strings.SortPostsBy}</option>
+                                <option value="voteScore">Vote Score</option>
+                                <option value="timestamp">Date</option>
+                            </select>
+                        </div>
+                    </div>
+                    : <h2>{Strings.NoPosts}</h2>
+                }
                 {this.props.posts.length > 0 && this.props.posts.map(post => (
                     <Link to={"/" + post.category}
                           key={post.id}>
@@ -49,8 +64,8 @@ function mapStateToProps (state, ownProps) {
 
 function mapDispatchToProps (dispatch) {
     return {
-        getAllCategories: () => dispatch(getAllCategories()),
         getAllPosts: (data) => dispatch(getAllPosts()),
+        sortPostsByProperty: (prop) => dispatch(sortPostsByProperty(prop))
     }
 }
 
