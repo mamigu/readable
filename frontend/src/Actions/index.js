@@ -15,7 +15,7 @@ export function getAllCategories() {
 
 export function getAllPosts() {
     return (dispatch) => {
-        ServerApi.getAllPosts()
+        return ServerApi.getAllPosts()
             .then(posts => {
                 dispatch({
                     type: ActionConstants.GET_ALL_POSTS,
@@ -40,21 +40,18 @@ export function getPostsForCategory(category = '') {
             .then(posts => {
                 dispatch({
                     type: ActionConstants.GET_POSTS_FOR_CATEGORY,
-                    data: {
-                        category,
-                        posts
-                    }
+                    data: posts
                 })
             })
     }
 }
 
-export function createNewPost(title, owner, body, category) {
+export function createNewPost(title, author, body, category) {
     const postData = {
         id: "_" + Math.random().toString(36).substr(2, 9),
         timestamp: new Date().getTime(),
         title,
-        owner,
+        author,
         body,
         category
     };
@@ -74,9 +71,27 @@ export function voteOnPost(postId, option) {
 
     return (dispatch) => {
         return ServerApi.voteOnPost(postId, {option})
-            .then(() => {
+            .then((post) => {
                 dispatch({
                     type: ActionConstants.VOTE_POST,
+                    data: post
+                })
+            })
+    }
+}
+
+export function editPost(postId, title, body) {
+    const postData = {
+        title,
+        body
+    };
+
+    return (dispatch) => {
+        return ServerApi.editPost(postId, postData)
+            .then((post) => {
+                dispatch({
+                    type: ActionConstants.EDIT_POST,
+                    data: post
                 })
             })
     }
@@ -98,4 +113,17 @@ export function getPostAndComments(postId) {
                     })
             })
         }
+}
+
+
+export function getCommentsForPost(postId) {
+    return (dispatch) => {
+        return ServerApi.getCommentsForPost(postId)
+            .then((comments) => {
+                dispatch({
+                    type: ActionConstants.LOAD_COMMENTS_FOR_POST,
+                    data: comments
+                })
+            })
+    }
 }

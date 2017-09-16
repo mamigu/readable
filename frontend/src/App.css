@@ -12,8 +12,18 @@ li {
   list-style-type: none;
 }
 
-a:link {
-    color: black;
+.post-author {
+  font-size: 12px;
+  padding: 5px;
+  color: rgb(119, 119, 119);
+}
+
+.post-link {
+  text-decoration: none !important;
+  padding-right: 10px;
+  font-family: "Segoe UI", Tahoma, sans-serif;
+  font-size: 75%;
+  cursor: pointer;
 }
 
 .post-sort-box {
@@ -21,18 +31,22 @@ a:link {
   margin: 5px;
 }
 
+.create-post-container h3{
+  text-align: center;
+}
+
 .post-container {
   display: flex;
-  flex-direction: row;
-  padding: 15px;
   border: solid;
   margin: 5px;
 }
 
 .post {
-  display: inherit;
   flex: 1 1 95%;
-  padding-top: 25px;
+}
+
+.post-details {
+  display: flex;
 }
 
 .post-title {
@@ -107,19 +121,6 @@ a:link {
   align-items: center;
 }
 
-.shopping-list {
-  background: none;
-  font-size: 18px;
-  border: none;
-  text-decoration: underline;
-  cursor: pointer;
-}
-
-.calendar {
-  margin-top: 0;
-  display: flex;
-}
-
 .icon-grid ul {
   display: flex;
   justify-content: space-around;
@@ -128,29 +129,6 @@ a:link {
 
 .icon-grid {
   flex: 1;
-}
-
-.meal-types {
-  display: flex;
-  justify-content: space-around;
-  margin: 0;
-  margin-left: 152px;
-}
-
-.meal {
-  font-size: 23px;
-  display: flex;
-  flex-direction: column;
-  height: 150px;
-  width: 100px;
-  justify-content: center;
-}
-
-.meal svg {
-  margin: 0 auto;
-  display: block;
-  margin-top: 15px;
-  cursor: pointer;
 }
 
 .overlay {
@@ -164,10 +142,10 @@ a:link {
 
 .modal {
   position: absolute;
-  top: 40px;
+  top: calc(10%);
   left: 200px;
   right: 200px;
-  bottom: 40px;
+  bottom: calc(30%);
   border: 1px solid rgb(204, 204, 204);
   background: rgb(255, 255, 255);
   overflow: auto;

@@ -1,10 +1,9 @@
 import React, {Component} from 'react';
 import {connect} from "react-redux";
-import {getPostsForCategory} from "../Actions/index";
-import NavigationBar from "./NavigationBar";
-import Post from "./Post";
-import PostBody from "./PostBody";
 import {Link, withRouter} from "react-router-dom";
+
+import Post from "./Post";
+import {getPostsForCategory} from "../Actions/index";
 
 class CategoryView extends Component {
 
@@ -13,25 +12,20 @@ class CategoryView extends Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        if(nextProps.match.params.category !== this.props.match.params.category || nextProps.category.length !== this.props.category.length) {
+        if(nextProps.match.params.category !== this.props.match.params.category) {
             this.props.getPostsForCategory(nextProps.match.params.category);
         }
-    }
-
-    shouldComponentUpdate(nextProps, nextState) {
-        return nextProps.match.params.category !== this.props.match.params.category || nextProps.category.length !== this.props.category.length;
     }
 
     render() {
         return (
             <div>
+                <h3>{this.props.match.params.category}</h3>
                 {this.props.category.length > 0 && (this.props.category.map(post => (
                     <Link to={"/" + post.category + "/" + post.id}
+                          className="post-link"
                           key={post.id}>
-                        <div className="post-container">
-                            <PostBody title={post.title}
-                                      timestamp={post.timestamp}/>
-                        </div>
+                        <Post post={post}/>
                     </Link>
 
                 )))

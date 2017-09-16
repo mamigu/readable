@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 
-import AddIcon from 'react-icons/lib/md/add';
-import RemoveIcon from 'react-icons/lib/md/remove';
+import UpArrow from 'react-icons/lib/md/arrow-drop-up';
+import DownArrow from 'react-icons/lib/md/arrow-drop-down';
 import {connect} from "react-redux";
 import * as Constants from "../Constants/Constants";
 import {voteOnPost} from "../Actions/index";
@@ -25,7 +25,7 @@ class VoteScoreIcon extends Component {
                 <div>
                     <button className="icon-btn"
                             onClick={(e) => this.onClick(e, this.props.id, Constants.UpVote)}>
-                        <AddIcon size={20}/>
+                        <UpArrow size={30}/>
                     </button>
                 </div>
                 <div>
@@ -33,8 +33,8 @@ class VoteScoreIcon extends Component {
                 </div>
                 <div>
                     <button className="icon-btn"
-                            onClick={this.onClick.bind(this, Constants.DownVote)}>
-                        <RemoveIcon size={20}/>
+                            onClick={(e) => this.onClick(e, this.props.id, Constants.DownVote)}>
+                        <DownArrow size={30}/>
                     </button>
                 </div>
             </div>

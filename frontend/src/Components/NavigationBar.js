@@ -1,8 +1,7 @@
 import React, {Component} from 'react';
-import {Link} from "react-router-dom";
+import {Link, withRouter} from "react-router-dom";
 import {connect} from "react-redux";
 
-import {createNewPost} from "../Actions/index";
 import CreatePostDialog from "./CreatePostDialog";
 
 class NavigationBar extends Component {
@@ -16,8 +15,6 @@ class NavigationBar extends Component {
             disabledSubmit: false
         };
 
-        this.onSelectionChanged = this.onSelectionChanged.bind(this);
-        this.onCreateNewPost = this.onCreateNewPost.bind(this);
     }
 
     openCreatePostModal() {
@@ -30,23 +27,6 @@ class NavigationBar extends Component {
         this.setState({
             createPostModal: false
         })
-    }
-
-    onSelectionChanged(event) {
-        this.setState({
-            selectedCategory: event.target.value,
-        })
-    }
-
-    onCreateNewPost(title, owner, body) {
-        this.setState({disabled: true});
-        let component = this;
-        if(this.state.selectedCategory !== "none") {
-            setTimeout(() => {
-                this.props.createNewPost(title, owner, body, this.state.selectedCategory);
-                component.setState({disabled: false, createPostModal: false});
-            })
-        }
     }
 
     render() {
@@ -66,12 +46,8 @@ class NavigationBar extends Component {
                         <a href="#" onClick={this.openCreatePostModal.bind(this)}>Create Post</a>
                     </li>
                 </ul>
-                <CreatePostDialog onSelectionChanged={this.onSelectionChanged}
-                                  onCreateNewPost={this.onCreateNewPost}
-                                  onClose={this.closeCreatePostModal.bind(this)}
-                                  display={this.state.createPostModal}
-                                  defaultValue={this.state.selectedCategory}
-                                  buttonDisabled={this.state.selectedCategory === "none" || this.state.disabledSubmit}/>
+                <CreatePostDialog onClose={this.closeCreatePostModal.bind(this)}
+                                  display={this.state.createPostModal}/>
             </div>
         )
     }
@@ -83,13 +59,4 @@ function mapStateToProps (state) {
     }
 }
 
-function mapDispatchToProps (dispatch) {
-    return {
-        createNewPost: (title, owner, body, category) => dispatch(createNewPost(title, owner, body, category))
-    }
-}
-
-export default connect(
-    mapStateToProps,
-    mapDispatchToProps
-)(NavigationBar)
+export default withRouter(connect(mapStateToProps)(NavigationBar));

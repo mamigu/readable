@@ -2,25 +2,35 @@ import React, {Component} from 'react';
 import {connect} from "react-redux";
 import {Link, withRouter} from "react-router-dom";
 
-import {getAllPosts, sortPostsByProperty} from "../Actions/index";
-import PostBody from "./PostBody";
+import {getAllPosts, sortPostsByProperty, getCommentsForPost} from "../Actions/index";
 import * as Strings from "../Constants/Strings";
+import Post from "./Post";
 
 class Home extends Component {
 
     constructor(props) {
         super(props);
         this.onSelectionChange = this.onSelectionChange.bind(this);
+        this.onPostsLoaded = this.onPostsLoaded.bind(this);
     }
 
     componentDidMount() {
-        this.props.getAllPosts();
+        let component = this;
+        this.props.getAllPosts()
+            .then(() => {
+                component.onPostsLoaded();
+            });
+    }
+
+    onPostsLoaded() {
+        this.props.posts.forEach(post => {
+            this.props.getCommentsForPost(post.id);
+        });
     }
 
     onSelectionChange(e) {
         if(e.target.value !== "none") {
             this.props.sortPostsByProperty(e.target.value);
-            this.forceUpdate();
         }
     }
 
@@ -30,7 +40,7 @@ class Home extends Component {
                 <h1>Readable Project Application</h1>
                 {this.props.posts.length > 0 ?
                     <div>
-                        <h2>{Strings.TopPosts}</h2>
+                        <h2>{Strings.Titles.TopPosts}</h2>
                         <div className="post-sort-box">
                             <select defaultValue="none" onChange={(e) => this.onSelectionChange(e)}>
                                 <option value="none" disabled>{Strings.SortPostsBy}</option>
@@ -39,17 +49,11 @@ class Home extends Component {
                             </select>
                         </div>
                     </div>
-                    : <h2>{Strings.NoPosts}</h2>
+                    : <h2>{Strings.Titles.NoPosts}</h2>
                 }
                 {this.props.posts.length > 0 && this.props.posts.map(post => (
-                    <Link to={"/" + post.category}
-                          key={post.id}>
-                        <div className="post-container">
-                            <PostBody title={post.title}
-                                      timestamp={post.timestamp}/>
-                        </div>
-                    </Link>
-
+                    <Post post={post}
+                          key={post.id}/>
                 ))}
             </div>
         )
@@ -65,6 +69,7 @@ function mapStateToProps (state, ownProps) {
 function mapDispatchToProps (dispatch) {
     return {
         getAllPosts: (data) => dispatch(getAllPosts()),
+        getCommentsForPost: (postId) => dispatch(getCommentsForPost(postId)),
         sortPostsByProperty: (prop) => dispatch(sortPostsByProperty(prop))
     }
 }

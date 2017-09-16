@@ -1,7 +1,59 @@
 import React, {Component} from 'react';
 import Modal from 'react-modal';
+import {connect} from "react-redux";
+import {withRouter} from "react-router-dom";
+import {createNewPost} from "../Actions/index";
+import * as Strings from "../Constants/Strings";
 
-export default class CreatePostDialog extends Component {
+class CreatePostDialog extends Component {
+
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            selectedCategory: "none",
+            disabled: false,
+            title: "",
+            author: "",
+            body: "",
+        }
+    }
+
+    onSelectionChanged(e) {
+        this.setState({
+            selectedCategory: e.target.value
+        })
+    }
+
+    isValidInputs(title, owner, category) {
+        return title !== "" && owner !== "" && category !== "none";
+    }
+
+    onCreatePost() {
+        this.setState({disabled: true});
+        this.props.createNewPost(this.state.title, this.state.author, this.state.body, this.state.selectedCategory).then(() => {
+            this.props.onClose();
+        });
+        this.setState({disabled: false});
+    }
+
+    onTitleChange(e) {
+        this.setState({
+            title: e.target.value
+        })
+    }
+
+    onAuthorChange(e) {
+        this.setState({
+            author: e.target.value,
+        })
+    }
+
+    onBodyChange(e) {
+        this.setState({
+            body: e.target.value
+        })
+    }
 
     render() {
         return (
@@ -10,53 +62,66 @@ export default class CreatePostDialog extends Component {
                    isOpen={this.props.display}
                    onRequestClose={this.props.onClose}
                    contentLabel='Modal'>
-                <div>
-                    <div className='post-container'>
-                        <h3 className='subheader'>
-                            Create New Post
-                        </h3>
+                <div className='create-post-container'>
+                    <h3 className='subheader'>{Strings.Titles.CreateNewPost}</h3>
 
-                        <div className='text-box'>
-                            <input className='text-input'
-                                   type='text'
-                                   placeholder='Title'
-                                   ref={(title) => this.title = title}/>
-                        </div>
-                        <div className='text-box'>
-                            <input className='text-input'
-                                   type='text'
-                                   placeholder='Author'
-                                   ref={(owner) => this.owner = owner}/>
-                        </div>
-
-                        <div className='text-box'>
-                            <select onChange={(e) => {this.props.onSelectionChanged(e);}}
-                                    defaultValue={this.props.defaultValue}>
-                                <option value="none" disabled>Select category...</option>
-                                <option value={"exercise"}>Exercise</option>
-                                <option value={"diet"}>Diet</option>
-                                <option value={"miscellaneous"}>Miscellaneous</option>
-                            </select>
-                        </div>
-
-                        <div className="text-box">
-                                <textarea className="text-input"
-                                          type="text"
-                                          placeholder="Description"
-                                          ref={(body) => this.body = body}/>
-                        </div>
-                        <button style={{padding: "5px", marginLeft: "10px"}}
-                                type='button' onClick={() => {this.props.onCreateNewPost(this.title.value, this.owner.value, this.body.value);}}
-                                disabled={this.props.buttonDisabled}>
-                            Create
-                        </button>
-
-                        <button style={{padding: "5px", marginLeft: "10px"}} type='button' onClick={this.props.onClose}>
-                            Close
-                        </button>
+                    <div className='text-box'>
+                        <input className='text-input'
+                               type='text'
+                               placeholder='Title(required)'
+                               onChange={this.onTitleChange.bind(this)}/>
                     </div>
+                    <div className='text-box'>
+                        <input className='text-input'
+                               type='text'
+                               placeholder='Author(required)'
+                               onChange={this.onAuthorChange.bind(this)}/>
+                    </div>
+
+                    <div className='text-box'>
+                        <select onChange={this.onSelectionChanged.bind(this)}
+                                defaultValue="none">
+                            <option value="none" disabled>{Strings.SelectCategory}</option>
+                            {this.props.categories.length > 0 && this.props.categories.map(cat => (
+                                <option value={cat.path} key={"_" + cat.path}>{cat.name}</option>
+                            ))}
+                        </select>
+                        <span>
+                            *
+                        </span>
+                    </div>
+
+                    <div className="text-box">
+                        <textarea className="text-input"
+                                  type="text"
+                                  placeholder="Description"
+                                  onChange={this.onBodyChange.bind(this)}/>
+                    </div>
+                    <button style={{padding: "5px", marginLeft: "10px"}}
+                            type='button' onClick={this.onCreatePost.bind(this)}
+                            disabled={this.state.disabled || !this.isValidInputs(this.state.title, this.state.author, this.state.body, this.state.selectedCategory)}>
+                        {Strings.Buttons.Create}
+                    </button>
+
+                    <button style={{padding: "5px", marginLeft: "10px"}} type='button' onClick={this.props.onClose}>
+                        {Strings.Buttons.Close}
+                    </button>
                 </div>
             </Modal>
         )
     }
 }
+
+function mapStateToProps (state) {
+    return {
+        ...state
+    }
+}
+
+function mapDispatchToProps (dispatch) {
+    return {
+        createNewPost: (title, author, body, category) => dispatch(createNewPost(title, author, body, category))
+    }
+}
+
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(CreatePostDialog));
