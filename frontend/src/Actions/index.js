@@ -46,18 +46,22 @@ export function getPostsForCategory(category = '') {
     }
 }
 
+export function deletePost(postId) {
+    return (dispatch) => {
+        return ServerApi.deletePost(postId)
+            .then((deletedPost) => {
+                dispatch({
+                    type: ActionConstants.DELETE_POST,
+                    data: deletedPost.id
+                })
+            })
+    }
+}
+
 export function createNewPost(title, author, body, category) {
-    const postData = {
-        id: "_" + Math.random().toString(36).substr(2, 9),
-        timestamp: new Date().getTime(),
-        title,
-        author,
-        body,
-        category
-    };
 
     return (dispatch) => {
-        return ServerApi.createNewPost(postData)
+        return ServerApi.createNewPost(title, author, body, category)
             .then((newPost) => {
                 dispatch({
                     type: ActionConstants.CREATE_NEW_POST,

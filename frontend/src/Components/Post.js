@@ -1,8 +1,9 @@
 import React, {Component} from 'react';
+import DeleteIcon from 'react-icons/lib/md/cancel';
+import {Link} from "react-router-dom";
 
 import * as Utilities from "../Util/Utilities";
 import VoteScoreIcon from "./VoteScoreIcon";
-import {Link} from "react-router-dom";
 import EditPostDialog from "./EditPostDialog";
 import * as Strings from "../Constants/Strings";
 
@@ -50,6 +51,11 @@ export default class Post extends Component {
                         <span className="post-timestamp">
                             {Utilities.convertSecondsToDate(post.timestamp)}
                         </span>
+                        <button className="icon-btn"
+                                style={{paddingTop: "5px", flex: "1 1 5%"}}
+                                onClick={this.props.onDeletePost}>
+                            <DeleteIcon size={30}/>
+                        </button>
                     </div>
                     <div className="post-author">
                         {`Created by ${post.author}`}

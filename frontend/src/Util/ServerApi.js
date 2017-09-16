@@ -1,9 +1,12 @@
 const API_URL = "http://localhost:3001";
 const headers = {Authorization: "mamigu", Accept: "application/json"};
+const DELETE = "DELETE";
+const POST = "POST";
+const PUT = "PUT";
 
-function postRequest(data) {
+function request(data, method) {
     return {
-        method: "POST",
+        method,
         headers: {
             ...headers,
             'Content-Type': "application/json"
@@ -12,15 +15,16 @@ function postRequest(data) {
     }
 }
 
+function deleteRequest(data) {
+    return request(data, DELETE);
+}
+
+function postRequest(data) {
+    return request(data, POST);
+}
+
 function putRequest(data) {
-    return {
-        method: "PUT",
-        headers: {
-            ...headers,
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify(data)
-    };
+    return request(data, PUT);
 }
 
 export function getAllCategories() {
@@ -39,7 +43,21 @@ export function getAllPosts() {
         .then((res) => res.json());
 }
 
-export function createNewPost(postData) {
+export function deletePost(postId) {
+    return fetch(`${API_URL}/posts/${postId}`, deleteRequest(postId))
+        .then((res) => res.json());
+}
+
+export function createNewPost(title, author, body, category) {
+    const postData = {
+        id: "_" + Math.random().toString(36).substr(2, 9),
+        timestamp: new Date().getTime(),
+        title,
+        author,
+        body,
+        category
+    };
+
     return fetch(`${API_URL}/posts`, postRequest(postData))
         .then((res) => res.json());
 }

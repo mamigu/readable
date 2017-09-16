@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import {connect} from "react-redux";
 import {Link, withRouter} from "react-router-dom";
 
-import {getAllPosts, sortPostsByProperty, getCommentsForPost} from "../Actions/index";
+import {getAllPosts, sortPostsByProperty, getCommentsForPost, deletePost} from "../Actions/index";
 import * as Strings from "../Constants/Strings";
 import Post from "./Post";
 
@@ -34,6 +34,10 @@ class Home extends Component {
         }
     }
 
+    onDeletePost(postId) {
+        this.props.deletePost(postId);
+    }
+
     render() {
         return (
             <div>
@@ -53,6 +57,7 @@ class Home extends Component {
                 }
                 {this.props.posts.length > 0 && this.props.posts.map(post => (
                     <Post post={post}
+                          onDeletePost={this.onDeletePost.bind(this, post.id)}
                           key={post.id}/>
                 ))}
             </div>
@@ -70,7 +75,8 @@ function mapDispatchToProps (dispatch) {
     return {
         getAllPosts: (data) => dispatch(getAllPosts()),
         getCommentsForPost: (postId) => dispatch(getCommentsForPost(postId)),
-        sortPostsByProperty: (prop) => dispatch(sortPostsByProperty(prop))
+        sortPostsByProperty: (prop) => dispatch(sortPostsByProperty(prop)),
+        deletePost: (postId) => dispatch(deletePost(postId))
     }
 }
 

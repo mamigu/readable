@@ -28,6 +28,9 @@ export default function(state = [], action) {
             !currentPosts.some(p => p.id === action.data.id) && currentPosts.push(action.data);
 
             return currentPosts.slice().sort(Utilities.comparePostsWithProp(Constants.VoteScore));
+        case ActionConstants.DELETE_POST:
+            var index = state.findIndex(post => post.id === action.data);
+            return index > -1 && state.splice(index, 1).length === 1 ? state.slice() : state;
         default:
             return state;
     }
