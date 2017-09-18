@@ -11,4 +11,4 @@ This is the frontend code for the readable project from udacity react nanodegree
 
 ## API Server
 
-Information about the API server and how to use it can be found in its [README file](api-server/README.md).
+Information about the API server and how to use it can be found in its [README file](../api-server/README.md).
