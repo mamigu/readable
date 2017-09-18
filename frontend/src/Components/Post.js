@@ -1,28 +1,45 @@
 import React, {Component} from 'react';
 import DeleteIcon from 'react-icons/lib/md/cancel';
-import {Link} from "react-router-dom";
+import {Link, withRouter} from "react-router-dom";
+import {connect} from "react-redux";
 
 import * as Utilities from "../Util/Utilities";
-import VoteScoreIcon from "./VoteScoreIcon";
-import EditPostDialog from "./EditPostDialog";
 import * as Strings from "../Constants/Strings";
 
-export default class Post extends Component {
+import VoteScoreIcon from "./VoteScoreIcon";
+import EditPostDialog from "./Dialogs/EditPostDialog";
+import CreateCommentDialog from "./Dialogs/CreateCommentDialog";
+import {deletePost, voteOnPost} from "../Actions/index";
+
+class Post extends Component {
 
     constructor(props) {
         super(props);
 
         this.state = {
-            display: false,
+            displayEditPost: false,
+            displayCreateComment: false,
         }
     }
 
     openEditDialog() {
-        this.setState({display: true});
+        this.setState({displayEditPost: true});
+    }
+
+    openCreateComment() {
+        this.setState({displayCreateComment: true});
     }
 
     onEditClose() {
-        this.setState({display: false});
+        this.setState({displayEditPost: false});
+    }
+
+    onCommentClose() {
+        this.setState({displayCreateComment: false});
+    }
+
+    onVote(postId, option) {
+        this.props.voteOnPost(postId, this.props.match.params.category, option);
     }
 
     render() {
@@ -30,7 +47,8 @@ export default class Post extends Component {
         return (
             <div className="post-container">
                 <VoteScoreIcon id={post.id}
-                               voteScore={post.voteScore}/>
+                               voteScore={post.voteScore}
+                               onClick={this.onVote.bind(this)}/>
                 <div className="post">
                     <div>
                         <Link to={`/${post.category}/${post.id}`}
@@ -44,27 +62,54 @@ export default class Post extends Component {
                     </div>
 
                     <div className="post-details">
-                        <span className="post-title">
+                        <span className="text-title">
                             {post.title}
                         </span>
 
-                        <span className="post-timestamp">
+                        <span className="text-timestamp">
                             {Utilities.convertSecondsToDate(post.timestamp)}
                         </span>
                         <button className="icon-btn"
                                 style={{paddingTop: "5px", flex: "1 1 5%"}}
-                                onClick={this.props.onDeletePost}>
-                            <DeleteIcon size={30}/>
+                                onClick={this.props.deletePost.bind(this, post.id)}>
+                            <DeleteIcon size={25}/>
                         </button>
                     </div>
                     <div className="post-author">
                         {`Created by ${post.author}`}
                     </div>
+                        {post.comments && post.comments.length > 0 ?
+                            <Link to={`/${post.category}/${post.id}`}
+                                  className="post-link">
+                                Show all {post.comments.length} comment(s)...
+                            </Link> :
+                            <button className="icon-btn post-link"
+                                    onClick={this.openCreateComment.bind(this)}>
+                                {Strings.Buttons.CreateComment}
+                            </button>
+                        }
                 </div>
-                <EditPostDialog display={this.state.display}
+                <EditPostDialog display={this.state.displayEditPost}
                                 onClose={this.onEditClose.bind(this)}
-                                currentPost={post}/>
+                                post={post}/>
+                <CreateCommentDialog display={this.state.displayCreateComment}
+                                     onClose={this.onCommentClose.bind(this)}/>
             </div>
         )
     }
 }
+
+function mapStateToProps (state) {
+    return {
+        ...state
+    }
+}
+
+function mapDispatchToProps (dispatch) {
+    return {
+        voteOnPost: (postId, category, option) => dispatch(voteOnPost(postId, category, option)),
+        deletePost: (postId) => dispatch(deletePost(postId))
+    }
+}
+
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Post));

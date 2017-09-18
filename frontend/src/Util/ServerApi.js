@@ -82,3 +82,40 @@ export function getCommentsForPost(postId) {
         .then((res) => res.json());
 }
 
+export function createComment(postId, author, body) {
+    const postData = {
+        id: "_" + Math.random().toString(36).substr(2, 9),
+        timestamp: new Date().getTime(),
+        parentId: postId,
+        author,
+        body,
+    };
+
+    return fetch(`${API_URL}/comments`, postRequest(postData))
+        .then((res) => res.json());
+}
+
+export function voteOnComment(commentId, option) {
+    const postData = {
+        option
+    };
+
+    return fetch(`${API_URL}/comments/${commentId}`, postRequest(postData))
+        .then(res => res.json());
+
+}
+
+export function deleteComment(commentId) {
+    return fetch(`${API_URL}/comments/${commentId}`, deleteRequest(commentId))
+        .then(res => res.json());
+}
+
+export function editComment(commentId, body) {
+    const putData = {
+        body,
+        timestamp: new Date().getTime()
+    };
+
+    return fetch(`${API_URL}/comments/${commentId}`, putRequest(putData))
+        .then(res => res.json());
+}

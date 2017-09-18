@@ -3,9 +3,9 @@ import {Route, Switch, withRouter} from 'react-router-dom'
 import {connect} from "react-redux";
 
 import NavigationBar from "./NavigationBar";
-import Home from "./Home";
-import CategoryView from "./CategoryView";
-import PostView from "./PostView";
+import Home from "./Views/Home";
+import CategoryView from "./Views/CategoryView";
+import PostView from "./Views/PostView";
 import {getAllCategories} from "../Actions/index";
 
 class App extends Component {

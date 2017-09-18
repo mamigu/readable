@@ -40,7 +40,10 @@ export function getPostsForCategory(category = '') {
             .then(posts => {
                 dispatch({
                     type: ActionConstants.GET_POSTS_FOR_CATEGORY,
-                    data: posts
+                    data: {
+                        posts,
+                        category
+                    }
                 })
             })
     }
@@ -52,14 +55,13 @@ export function deletePost(postId) {
             .then((deletedPost) => {
                 dispatch({
                     type: ActionConstants.DELETE_POST,
-                    data: deletedPost.id
+                    data: deletedPost
                 })
             })
     }
 }
 
 export function createNewPost(title, author, body, category) {
-
     return (dispatch) => {
         return ServerApi.createNewPost(title, author, body, category)
             .then((newPost) => {
@@ -72,7 +74,6 @@ export function createNewPost(title, author, body, category) {
 }
 
 export function voteOnPost(postId, option) {
-
     return (dispatch) => {
         return ServerApi.voteOnPost(postId, {option})
             .then((post) => {
@@ -101,32 +102,89 @@ export function editPost(postId, title, body) {
     }
 }
 
-export function getPostAndComments(postId) {
+export function getPostDetails(postId) {
     return (dispatch) => {
         return ServerApi.getPostDetails(postId)
             .then((post) => {
-                return ServerApi.getCommentsForPost(postId)
-                    .then((comments) => {
-                        dispatch({
-                            type: ActionConstants.LOAD_POST_AND_COMMENTS,
-                            data: {
-                                comments,
-                                post
-                            }
-                        })
-                    })
+                dispatch({
+                    type: ActionConstants.LOAD_POST,
+                    data: post
+                })
             })
-        }
+    }
 }
 
-
-export function getCommentsForPost(postId) {
+export function getCommentsForPost(postId, category) {
     return (dispatch) => {
         return ServerApi.getCommentsForPost(postId)
             .then((comments) => {
                 dispatch({
                     type: ActionConstants.LOAD_COMMENTS_FOR_POST,
-                    data: comments
+                    data: {
+                        id: postId,
+                        category,
+                        comments,
+                    }
+                })
+            })
+    }
+}
+
+export function createComment(postId, category, author, body) {
+    return (dispatch) => {
+        return ServerApi.createComment(postId, author, body)
+            .then((comment) => {
+                dispatch({
+                    type: ActionConstants.CREATE_COMMENT,
+                    data: {
+                        comment,
+                        category
+                    }
+                })
+            })
+    }
+}
+
+export function voteOnComment(commentId, category, option) {
+    return (dispatch) => {
+        return ServerApi.voteOnComment(commentId, option)
+            .then(comment => {
+                dispatch({
+                    type: ActionConstants.VOTE_COMMENT,
+                    data: {
+                        category,
+                        comment
+                    }
+                })
+            })
+    }
+}
+
+export function deleteComment(commentId, category) {
+    return (dispatch) => {
+        return ServerApi.deleteComment(commentId)
+            .then(comment => {
+                dispatch({
+                    type: ActionConstants.DELETE_COMMENT,
+                    data: {
+                        comment,
+                        category
+                    }
+                })
+            })
+    }
+}
+
+export function editComment(commentId, category, body) {
+    return (dispatch) => {
+        return ServerApi.editComment(commentId, body)
+            .then(comment => {
+                dispatch({
+                    type: ActionConstants.EDIT_COMMENT,
+                    data: {
+                        comment,
+                        category
+                    }
                 })
             })
     }

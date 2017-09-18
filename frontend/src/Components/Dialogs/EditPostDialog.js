@@ -3,8 +3,8 @@ import Modal from 'react-modal';
 import {connect} from "react-redux";
 import {withRouter} from "react-router-dom";
 
-import {editPost} from "../Actions/index";
-import * as Strings from "../Constants/Strings";
+import {editPost} from "../../Actions/index";
+import * as Strings from "../../Constants/Strings";
 
 class EditPostDialog extends Component {
     constructor(props) {
@@ -12,19 +12,20 @@ class EditPostDialog extends Component {
 
         this.state = {
             disabled: false,
+
         }
     }
 
     onEditPost() {
         this.setState({disabled: true});
-        this.props.editPost(this.props.currentPost.id, this.title.value, this.body.value).then(() => {
-                this.props.onClose();
+        this.props.editPost(this.props.post.id, this.title.value, this.body.value).then(() => {
+            this.props.onClose();
         });
         this.setState({disabled: false});
     }
 
     render() {
-        const post = this.props.currentPost;
+        const post = this.props.post;
         return (
             <Modal className='modal'
                    overlayClassName='overlay'

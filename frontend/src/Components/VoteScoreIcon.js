@@ -2,22 +2,19 @@ import React, {Component} from 'react';
 
 import UpArrow from 'react-icons/lib/md/arrow-drop-up';
 import DownArrow from 'react-icons/lib/md/arrow-drop-down';
-import {connect} from "react-redux";
 import * as Constants from "../Constants/Constants";
-import {voteOnPost} from "../Actions/index";
 
-class VoteScoreIcon extends Component {
+export default class VoteScoreIcon extends Component {
 
     constructor(props) {
         super(props);
         this.onClick = this.onClick.bind(this);
     }
 
-    onClick(event, postId, option) {
+    onClick(event, id, option) {
         event.preventDefault();
-        this.props.voteOnPost(postId, option);
+        this.props.onClick(id, option);
     }
-
 
     render() {
         return (
@@ -41,20 +38,3 @@ class VoteScoreIcon extends Component {
         )
     }
 }
-
-function mapStateToProps (state) {
-    return {
-        ...state
-    }
-}
-
-function mapDispatchToProps (dispatch) {
-    return {
-        voteOnPost: (id, option) => dispatch(voteOnPost(id, option)),
-    }
-}
-
-export default connect(
-    mapStateToProps,
-    mapDispatchToProps
-)(VoteScoreIcon)

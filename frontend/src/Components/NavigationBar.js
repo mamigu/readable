@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import {Link, withRouter} from "react-router-dom";
 import {connect} from "react-redux";
 
-import CreatePostDialog from "./CreatePostDialog";
+import CreatePostDialog from "./Dialogs/CreatePostDialog";
 
 class NavigationBar extends Component {
 
