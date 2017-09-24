@@ -130,61 +130,49 @@ export function getCommentsForPost(postId, category) {
     }
 }
 
-export function createComment(postId, category, author, body) {
+export function createComment(postId, author, body) {
     return (dispatch) => {
         return ServerApi.createComment(postId, author, body)
             .then((comment) => {
                 dispatch({
                     type: ActionConstants.CREATE_COMMENT,
-                    data: {
-                        comment,
-                        category
-                    }
+                    data: comment
                 })
             })
     }
 }
 
-export function voteOnComment(commentId, category, option) {
+export function voteOnComment(commentId, option) {
     return (dispatch) => {
         return ServerApi.voteOnComment(commentId, option)
             .then(comment => {
                 dispatch({
                     type: ActionConstants.VOTE_COMMENT,
-                    data: {
-                        category,
-                        comment
-                    }
+                    data: comment
                 })
             })
     }
 }
 
-export function deleteComment(commentId, category) {
+export function deleteComment(commentId) {
     return (dispatch) => {
         return ServerApi.deleteComment(commentId)
             .then(comment => {
                 dispatch({
                     type: ActionConstants.DELETE_COMMENT,
-                    data: {
-                        comment,
-                        category
-                    }
+                    data: comment
                 })
             })
     }
 }
 
-export function editComment(commentId, category, body) {
+export function editComment(commentId, body) {
     return (dispatch) => {
         return ServerApi.editComment(commentId, body)
             .then(comment => {
                 dispatch({
                     type: ActionConstants.EDIT_COMMENT,
-                    data: {
-                        comment,
-                        category
-                    }
+                    data: comment,
                 })
             })
     }

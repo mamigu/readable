@@ -38,9 +38,7 @@ class Home extends Component {
 
     onSelectionChange(e) {
         if(e.target.value !== "none") {
-            this.setState({
-                sortBy: e.target.value,
-            });
+            this.setState({sortBy: e.target.value});
         }
     }
 

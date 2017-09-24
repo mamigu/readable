@@ -25,7 +25,7 @@ class CreateCommentDialog extends Component {
 
     onCreateComment() {
         this.setState({disabled: true});
-        this.props.createComment(this.props.match.params.id, this.props.match.params.category, this.state.author, this.state.body)
+        this.props.createComment(this.props.postId, this.state.author, this.state.body)
             .then(() => {
                 this.props.onClose();
             });
@@ -90,7 +90,7 @@ function mapStateToProps (state) {
 
 function mapDispatchToProps (dispatch) {
     return {
-        createComment: (postId, category, author, body) => dispatch(createComment(postId, category, author, body))
+        createComment: (postId, author, body) => dispatch(createComment(postId, author, body))
     }
 }
 

@@ -21,11 +21,11 @@ class Comment extends Component {
     }
 
     onVote(commentId, option) {
-        this.props.voteOnComment(commentId, this.props.match.params.category, option);
+        this.props.voteOnComment(commentId, option);
     }
 
     onDeleteComment() {
-        this.props.deleteComment(this.props.comment.id, this.props.match.params.category);
+        this.props.deleteComment(this.props.comment.id);
     }
 
     openEditDialog() {
@@ -37,7 +37,7 @@ class Comment extends Component {
     }
 
     onCommentUpdate(commentId, body) {
-        this.props.editComment(commentId, this.props.match.params.category, body)
+        this.props.editComment(commentId, body)
             .then(() => this.onEditClose());
     }
 
@@ -91,9 +91,9 @@ function mapStateToProps (state) {
 
 function mapDispatchToProps (dispatch) {
     return {
-        voteOnComment: (commentId, category, option) => dispatch(voteOnComment(commentId, category, option)),
-        deleteComment: (commentId, category) => dispatch(deleteComment(commentId, category)),
-        editComment: (commentId, category, body) => dispatch(editComment(commentId, category, body))
+        voteOnComment: (commentId, option) => dispatch(voteOnComment(commentId, option)),
+        deleteComment: (commentId) => dispatch(deleteComment(commentId)),
+        editComment: (commentId, body) => dispatch(editComment(commentId, body))
     }
 }
 

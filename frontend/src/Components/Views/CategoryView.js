@@ -42,10 +42,6 @@ class CategoryView extends Component {
         });
     }
 
-    onDeletePost(postId) {
-        this.props.deletePost(postId);
-    }
-
     onSelectionChange(e) {
         if(e.target.value !== "none") {
             this.setState({sortBy: e.target.value});
@@ -71,7 +67,6 @@ class CategoryView extends Component {
                 )}
                 {posts && posts.length > 0 && (posts.sort(Utilities.comparePostsWithProp(this.state.sortBy)).map(post => (
                     <Post post={post}
-                          onDeletePost={this.onDeletePost.bind(this, post.id)}
                           key={post.id}/>
                 )))
                 }

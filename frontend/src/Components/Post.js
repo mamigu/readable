@@ -39,11 +39,12 @@ class Post extends Component {
     }
 
     onVote(postId, option) {
-        this.props.voteOnPost(postId, this.props.match.params.category, option);
+        this.props.voteOnPost(postId, option);
     }
 
     render() {
         const post = this.props.post;
+        const comments = this.props.comments[post.id];
         return (
             <div className="post-container">
                 <VoteScoreIcon id={post.id}
@@ -78,10 +79,10 @@ class Post extends Component {
                     <div className="post-author">
                         {`Created by ${post.author}`}
                     </div>
-                        {post.comments && post.comments.length > 0 ?
+                        {comments && comments.length > 0 ?
                             <Link to={`/${post.category}/${post.id}`}
                                   className="post-link">
-                                Show all {post.comments.length} comment(s)...
+                                Show all {comments.length} comment(s)...
                             </Link> :
                             <button className="icon-btn post-link"
                                     onClick={this.openCreateComment.bind(this)}>
@@ -92,7 +93,8 @@ class Post extends Component {
                 <EditPostDialog display={this.state.displayEditPost}
                                 onClose={this.onEditClose.bind(this)}
                                 post={post}/>
-                <CreateCommentDialog display={this.state.displayCreateComment}
+                <CreateCommentDialog postId={post.id}
+                                     display={this.state.displayCreateComment}
                                      onClose={this.onCommentClose.bind(this)}/>
             </div>
         )
@@ -107,7 +109,7 @@ function mapStateToProps (state) {
 
 function mapDispatchToProps (dispatch) {
     return {
-        voteOnPost: (postId, category, option) => dispatch(voteOnPost(postId, category, option)),
+        voteOnPost: (postId, option) => dispatch(voteOnPost(postId, option)),
         deletePost: (postId) => dispatch(deletePost(postId))
     }
 }
